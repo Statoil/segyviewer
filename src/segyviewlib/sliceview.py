@@ -70,6 +70,7 @@ class SliceView(object):
         """ :type context: dict """
         self._image.set_cmap(context['colormap'])
         self._image.set_clim(context['min'], context['max'])
+        self._image.set_interpolation(context['interpolation'])
         self._update_indicators(context)
 
     def _update_indicators(self, context):

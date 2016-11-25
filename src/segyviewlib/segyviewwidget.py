@@ -1,4 +1,4 @@
-from PyQt4.QtGui import QCheckBox, QWidget
+from PyQt4.QtGui import QCheckBox, QWidget, QComboBox
 from PyQt4.QtGui import QFileDialog
 from PyQt4.QtGui import QToolButton, QToolBar, QVBoxLayout
 from PyQt4.QtGui import QWidget
@@ -26,11 +26,12 @@ class SegyViewWidget(QWidget):
 
         self._toolbar = self._create_toolbar(color_maps)
         self._toolbar.setVisible(show_toolbar)
-
         layout.addWidget(self._toolbar)
         layout.addWidget(self._slice_view_widget)
 
         self.setLayout(layout)
+
+        self.show_advanced_features(False)
 
     def toolbar(self):
         """ :rtype: QToolBar """
@@ -60,6 +61,11 @@ class SegyViewWidget(QWidget):
         save_button.clicked.connect(self._save_figure)
         toolbar.addWidget(save_button)
 
+        self._interpolation_combo = QComboBox()
+        self._interpolation_combo.addItems(['nearest', 'catrom', 'sinc'])
+        self._interpolation_combo.currentIndexChanged.connect(self._interpolation_changed)
+        self._interpolation_action = toolbar.addWidget(self._interpolation_combo)
+
         indicator_visibility.setChecked(True)
         self._colormap_combo.setCurrentIndex(45)
         layout_combo.setCurrentIndex(2)
@@ -69,6 +75,10 @@ class SegyViewWidget(QWidget):
     def _colormap_changed(self, index):
         colormap = str(self._colormap_combo.itemText(index))
         self._slice_view_widget.set_colormap(colormap)
+
+    def _interpolation_changed(self, index):
+        interpolation_name = str(self._interpolation_combo.itemText(index))
+        self._slice_view_widget.set_interpolation(interpolation_name)
 
     def _save_figure(self):
         formats = "Portable Network Graphic (*.png);;Adobe Acrobat (*.pdf);;Scalable Vector Graphics (*.svg)"
@@ -83,3 +93,6 @@ class SegyViewWidget(QWidget):
     def set_source_filename(self, filename):
         self._slice_data_source.set_source_filename(filename)
         self._slice_view_widget.slice_data_source_changed()
+
+    def show_advanced_features(self, visible):
+        self._interpolation_action.setVisible(visible)

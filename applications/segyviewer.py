@@ -28,6 +28,8 @@ class SegyViewer(QMainWindow):
         toolbar.insertWidget(first_action, open_button)
         toolbar.insertSeparator(first_action)
 
+        self._segy_view_widget.show_advanced_features(True)
+
     def _open_file(self):
         input_file = QFileDialog.getOpenFileName(self, "Open SEG-Y file", "", "Segy File  (*.seg *.segy *.sgy)")
         input_file = str(input_file).strip()
