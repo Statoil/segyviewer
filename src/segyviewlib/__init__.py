@@ -27,6 +27,7 @@ from .slicedatasource import SliceDataSource
 from .slicemodelcontroller import SliceModelController
 from .sliceview import SliceView
 from .sliceviewwidget import SliceViewWidget
+from .segyviewwidget import SegyViewWidget
 
 __version__ = '1.0.4'
 __copyright__ = 'Copyright 2016, Statoil ASA'

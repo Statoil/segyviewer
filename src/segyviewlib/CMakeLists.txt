@@ -11,6 +11,8 @@ set(PYTHON_SOURCES
     sliceview.py
     sliceviewwidget.py
 
+    segyviewwidget.py
+
     )
 
 add_python_package(segyviewlib segyviewlib "${PYTHON_SOURCES}")
