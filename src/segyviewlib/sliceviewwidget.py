@@ -183,3 +183,9 @@ class SliceViewWidget(LayoutCanvas):
                 slice_view = self._get_slice_view(event)
                 slice_view.pan(dx, dy)
                 self._context_changed()
+
+    def slice_data_source_changed(self):
+        self._global_max = None
+        self._global_min = None
+        self._slice_model_controller.reset()
+        self._layout_changed()

@@ -2,7 +2,7 @@
 import sys
 
 from PyQt4.QtCore import Qt
-from PyQt4.QtGui import QMainWindow, QApplication, QCheckBox, QToolButton, QFileDialog
+from PyQt4.QtGui import QMainWindow, QApplication, QCheckBox, QToolButton, QFileDialog, QToolBar
 
 import segyio
 
@@ -11,7 +11,7 @@ from segyviewlib import SliceViewWidget, ColormapCombo, SliceModel, SliceDirecti
 
 
 class SegyViewer(QMainWindow):
-    def __init__(self, s=None):
+    def __init__(self, filename=None):
         QMainWindow.__init__(self)
 
         self.setAttribute(Qt.WA_DeleteOnClose)
@@ -22,12 +22,21 @@ class SegyViewer(QMainWindow):
         depth = SliceModel("Depth", SD.depth, SD.inline, SD.crossline)
 
         slice_models = [inline, xline, depth]
-        slice_data_source = SliceDataSource(s)
-
-        self._slice_view_widget = SliceViewWidget(slice_models, slice_data_source)
+        self._slice_data_source = SliceDataSource(filename)
+        self._slice_view_widget = SliceViewWidget(slice_models, self._slice_data_source)
 
         toolbar = self.addToolBar("Stuff")
         """:type: QToolBar"""
+        toolbar.setFloatable(False)
+        toolbar.setMovable(False)
+
+        open_button = QToolButton()
+        open_button.setToolTip("Open a SEG-Y file")
+        open_button.setIcon(resource_icon("folder.png"))
+        open_button.clicked.connect(self._open_file)
+        toolbar.addWidget(open_button)
+
+        toolbar.addSeparator()
 
         layout_combo = LayoutCombo()
         toolbar.addWidget(layout_combo)
@@ -47,7 +56,6 @@ class SegyViewer(QMainWindow):
         save_button.setIcon(resource_icon("table_export.png"))
         save_button.clicked.connect(self._save_figure)
         toolbar.addWidget(save_button)
-
 
         indicator_visibility.setChecked(True)
         self._colormap_combo.setCurrentIndex(45)
@@ -69,14 +77,20 @@ class SegyViewer(QMainWindow):
             layout_figure = self._slice_view_widget.layout_figure()
             layout_figure.savefig(output_file)
 
+    def _open_file(self):
+        input_file = QFileDialog.getOpenFileName(self, "Open SEG-Y file", "", "Segy File  (*.seg *.segy *.sgy)")
+        input_file = str(input_file).strip()
+
+        if input_file:
+            self._slice_data_source.set_source_filename(input_file)
+            self._slice_view_widget.slice_data_source_changed()
+
 
 def run(filename):
-    with segyio.open(filename, "r") as s:
-        s.mmap()
-        segy_viewer = SegyViewer(s)
-        segy_viewer.show()
-        segy_viewer.raise_()
-        sys.exit(q_app.exec_())
+    segy_viewer = SegyViewer(filename)
+    segy_viewer.show()
+    segy_viewer.raise_()
+    sys.exit(q_app.exec_())
 
 
 if __name__ == '__main__':

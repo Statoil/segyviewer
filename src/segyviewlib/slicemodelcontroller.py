@@ -79,3 +79,8 @@ class SliceModelController(object):
         for m in [sm for sm in self._models if sm.dirty and sm.visible]:
             # print("loading data for %s" % m.title)
             m.data = self._slice_data_source.read_slice(m.index_direction, m.index)
+
+    def reset(self):
+        for model in self._models:
+            model.reset()
+        self._assign_indexes()
