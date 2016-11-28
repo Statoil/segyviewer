@@ -1,0 +1,39 @@
+language: generic
+
+env:
+  - PYTHON=2.7
+
+os:
+  - linux
+  - osx
+
+before_script:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+      export CONDA_OS=MacOSX;
+    else
+      export CONDA_OS=Linux;
+    fi
+  - if [[ "$PYTHON" == "2.7" ]]; then
+        wget https://repo.continuum.io/miniconda/Miniconda2-latest-${CONDA_OS}-x86_64.sh -O miniconda.sh;
+    else
+        wget https://repo.continuum.io/miniconda/Miniconda3-latest-${CONDA_OS}-x86_64.sh -O miniconda.sh;
+    fi
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda update -q conda
+  - conda info -a
+
+  - conda install numpy cmake pyqt=4 matplotlib
+
+  - pip install segyio
+
+  - cmake --version
+  - mkdir build
+  - cd build
+  - cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE ..
+  - make
+  - export LD_LIBRARY_PATH=$PWD
+
+script: make && ctest --output-on-failure
