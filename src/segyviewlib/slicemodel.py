@@ -220,3 +220,19 @@ class SliceModel(object):
 
     def __len__(self):
         return len(self.indexes)
+
+    def reset(self):
+        self._indexes = None
+        self._x_indexes = None
+        self._y_indexes = None
+
+        self._data = None
+        self._data_x_indexes = None
+        self._data_y_indexes = None
+
+        self._index = 0
+        self._x_index = 0
+        self._y_index = 0
+
+        self._min_value = None
+        self._max_value = None

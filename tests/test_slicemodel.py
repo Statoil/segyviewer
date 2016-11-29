@@ -118,3 +118,28 @@ class SliceModelTest(TestCase):
         self.assertEqual(model.x_index, 99)
         self.assertEqual(model.y_index, 33)
         self.assertFalse(model.visible)
+
+    def test_reset(self):
+        model = SliceModel("test", SD.inline, SD.crossline, SD.depth)
+        model.data = np.zeros((3, 5))
+        model.data[0, 0] = -1.0
+        model.data[1, 0] = 1.0
+
+        model.x_indexes = [2, 4, 6, 8, 10]
+        model.y_indexes = [1, 3, 5]
+
+        model.indexes = [1, 2, 3]
+        model.index = 5
+        model.x_index = 99
+        model.y_index = 33
+
+        model.reset()
+
+        self.assertIsNone(model.data)
+        self.assertEqual(model.index, 0)
+        self.assertIsNone(model.max_value)
+        self.assertEqual(model.x_index, 0)
+        self.assertEqual(model.y_index, 0)
+        self.assertIsNone(model.indexes)
+        self.assertIsNone(model.x_indexes)
+        self.assertIsNone(model.y_indexes)

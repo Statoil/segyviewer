@@ -33,6 +33,7 @@ class SliceViewWidget(LayoutCanvas):
 
         self._global_min = None
         self._global_max = None
+        self._interpolation = 'nearest'
 
     def set_colormap(self, colormap):
         self._colormap_name = colormap
@@ -41,6 +42,10 @@ class SliceViewWidget(LayoutCanvas):
 
     def show_indicators(self, visible):
         self._show_indicators = visible
+        self._context_changed()
+
+    def set_interpolation(self, interpolation_name):
+        self._interpolation = interpolation_name
         self._context_changed()
 
     def _create_context(self):
@@ -68,7 +73,8 @@ class SliceViewWidget(LayoutCanvas):
             "view_max": view_max,
             "min": vmin,
             "max": vmax,
-            "normalize": Normalize(vmin=vmin, vmax=vmax)
+            "normalize": Normalize(vmin=vmin, vmax=vmax),
+            "interpolation": self._interpolation
         }
 
     def _layout_changed(self):
@@ -183,3 +189,9 @@ class SliceViewWidget(LayoutCanvas):
                 slice_view = self._get_slice_view(event)
                 slice_view.pan(dx, dy)
                 self._context_changed()
+
+    def slice_data_source_changed(self):
+        self._global_max = None
+        self._global_min = None
+        self._slice_model_controller.reset()
+        self._layout_changed()
