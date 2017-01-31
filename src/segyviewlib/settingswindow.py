@@ -1,3 +1,4 @@
+from __future__ import division
 import sys
 from PyQt4.QtGui import QCheckBox, QWidget, QFormLayout, QComboBox, QLabel, QSpinBox, QValidator
 from PyQt4.QtGui import QPushButton, QDoubleSpinBox, QHBoxLayout, QVBoxLayout
@@ -141,6 +142,44 @@ class SettingsWindow(QWidget):
         self._interpolation_combo.currentIndexChanged.connect(self._interpolation_changed)
         layout.addRow("Interpolation Type:", self._interpolation_combo)
 
+        self.add_empty_row(layout)
+
+        self._dpi_units  = ["in", "cm", "px"]
+        self._fix_size   = QCheckBox()
+        self._fix_width  = QDoubleSpinBox()
+        self._fix_height = QDoubleSpinBox()
+        self._fix_dpi    = QComboBox()
+
+        if parent is None:
+            w, h, dpi = 11.7, 8.3, 100
+        else:
+            fig = parent._slice_view_widget.layout_figure()
+            w, h = fig.get_size_inches()
+            dpi = fig.dpi
+
+        self._fix_width.setMinimum(1)
+        self._fix_width.setMaximum(32000)
+        self._fix_width.setValue(w)
+
+        self._fix_height.setMinimum(1)
+        self._fix_height.setMaximum(32000)
+        self._fix_height.setValue(h)
+
+        self._fix_width.valueChanged.connect(self._fixed_image)
+        self._fix_height.valueChanged.connect(self._fixed_image)
+
+        self._fix_dpi.addItems(self._dpi_units)
+        self._fix_dpi.activated.connect(self._fixed_image)
+        self._fix_size.toggled.connect(self._fixed_image)
+
+        wxh_layout = QHBoxLayout()
+        wxh_layout.addWidget(self._fix_width)
+        wxh_layout.addWidget(self._fix_height)
+
+        layout.addRow("Fix export size:", self._fix_size)
+        layout.addRow("Width x Height:", wxh_layout)
+        layout.addRow("Unit:", self._fix_dpi)
+
         vertical_layout = QVBoxLayout()
 
         button_layout = QHBoxLayout()
@@ -154,6 +193,30 @@ class SettingsWindow(QWidget):
         vertical_layout.addLayout(button_layout)
 
         self.setLayout(vertical_layout)
+
+    @staticmethod
+    def to_inches(width, height, dpi, scale):
+        if scale == "in":
+            return (width, height, dpi)
+        elif scale == "cm":
+            return (width / 2.54, height / 2.54, dpi)
+        elif scale == "px":
+            return (int(width) / dpi, int(height) / dpi, dpi)
+        else:
+            raise NotImplementedError
+
+    def _fixed_image(self):
+        ctx = self._context
+        if not self._fix_size.isChecked():
+            ctx.set_image_size(None)
+            return
+
+        w = self._fix_width.value()
+        h = self._fix_height.value()
+        dpi = 100
+        scale = self._fix_dpi.currentText()
+
+        ctx.set_image_size(*self.to_inches(w, h, dpi, scale))
 
     def _create_user_value(self):
         layout = QHBoxLayout()

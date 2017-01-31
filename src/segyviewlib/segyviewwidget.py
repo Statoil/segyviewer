@@ -88,9 +88,18 @@ class SegyViewWidget(QWidget):
 
         output_file = str(output_file).strip()
 
-        if len(output_file) > 0:
-            layout_figure = self._slice_view_widget.layout_figure()
-            layout_figure.savefig(output_file)
+        if len(output_file) == 0:
+            return
+
+        image_size = self._context.image_size
+        if not image_size:
+            fig = self._slice_view_widget
+        else:
+            w, h, dpi = image_size
+            fig = SliceViewWidget(self._context, width = w, height = h, dpi = dpi)
+            fig.set_plot_layout(self._slice_view_widget.current_layout())
+
+        fig.layout_figure().savefig(output_file)
 
     def set_source_filename(self, filename):
         self._slice_data_source.set_source_filename(filename)

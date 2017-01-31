@@ -9,7 +9,7 @@ class SliceViewContext(QObject):
     data_changed = pyqtSignal()
     data_source_changed = pyqtSignal()
 
-    def __init__(self, slice_models, slice_data_source, colormap='seismic', interpolation='nearest'):
+    def __init__(self, slice_models, slice_data_source, colormap='seismic', interpolation='nearest', image_size = None):
         QObject.__init__(self)
 
         self._available_slice_models = slice_models
@@ -27,6 +27,7 @@ class SliceViewContext(QObject):
         self._user_max_value = None
         self._interpolation = interpolation
         self._symmetric_scale = True
+        self._image_size = image_size
 
         self._assign_indexes()
 
@@ -65,6 +66,11 @@ class SliceViewContext(QObject):
         """ :rtype: bool """
         return self._symmetric_scale
 
+    @property
+    def image_size(self):
+        """ :rtype: None | Tuple(float, float, int) """
+        return self._image_size
+
     def set_colormap(self, colormap):
         self._colormap_name = colormap
         self.context_changed.emit()
@@ -93,6 +99,15 @@ class SliceViewContext(QObject):
 
         if dirty:
             self.context_changed.emit()
+
+    def set_image_size(self, width, height = None, dpi = None):
+        if width is None:
+            return
+
+        if height is None or dpi is None:
+            raise ValueError("Internal error: expects width, height, dpi")
+
+        self._image_size = (width, height, dpi)
 
     def create_context(self, assigned_slice_models):
         view_min = None
