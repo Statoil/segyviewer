@@ -97,7 +97,7 @@ class SegyViewWidget(QWidget):
         else:
             w, h, dpi = image_size
             fig = SliceViewWidget(self._context, width = w, height = h, dpi = dpi)
-            fig.set_plot_layout(self._slice_view_widget.current_layout())
+            fig.set_plot_layout(self._slice_view_widget.layout_figure().current_layout())
 
         fig.layout_figure().savefig(output_file)
 

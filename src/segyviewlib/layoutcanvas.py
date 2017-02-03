@@ -57,8 +57,6 @@ class LayoutCanvas(FigureCanvas):
         self._start_subplot_index = None
         self._keys = Keys()
 
-        self._current_layout = None
-
     def _create_event(self, event):
         data = {
             "x": event.xdata,
@@ -125,12 +123,8 @@ class LayoutCanvas(FigureCanvas):
     def set_plot_layout(self, layout_spec):
         self._figure.set_plot_layout(layout_spec)
         self.layout_changed.emit()
-        self._current_layout = layout_spec
         self.draw()
 
     def layout_figure(self):
         """ :rtype: LayoutFigure """
         return self._figure
-
-    def current_layout(self):
-        return self._current_layout

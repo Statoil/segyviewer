@@ -7,6 +7,8 @@ class LayoutFigure(Figure):
     def __init__(self, width=11.7, height=8.3, dpi=100, tight_layout=True, **kwargs):
         super(LayoutFigure, self).__init__(figsize=(width, height), dpi=dpi, tight_layout=tight_layout, **kwargs)
 
+        self._current_layout = None
+
         self._axes = []
         """ :type: list[Axes] """
 
@@ -29,6 +31,8 @@ class LayoutFigure(Figure):
             self.delaxes(self._colormap_axes)
         self._colormap_axes = self.add_subplot(grid_spec[:, columns])
 
+        self._current_layout = layout_spec
+
     def index(self, axes):
         """
         :param axes: The Axes instance to find the index of.
@@ -46,3 +50,6 @@ class LayoutFigure(Figure):
     def layout_axes(self):
         """ :rtype: list[Axes] """
         return list(self._axes)
+
+    def current_layout(self):
+        return self._current_layout
