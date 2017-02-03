@@ -148,7 +148,7 @@ class SettingsWindow(QWidget):
         self._fix_size   = QCheckBox()
         self._fix_width  = QDoubleSpinBox()
         self._fix_height = QDoubleSpinBox()
-        self._fix_dpi    = QComboBox()
+        self._fix_dpi_units    = QComboBox()
 
         if parent is None:
             w, h, dpi = 11.7, 8.3, 100
@@ -168,8 +168,8 @@ class SettingsWindow(QWidget):
         self._fix_width.valueChanged.connect(self._fixed_image)
         self._fix_height.valueChanged.connect(self._fixed_image)
 
-        self._fix_dpi.addItems(self._dpi_units)
-        self._fix_dpi.activated.connect(self._fixed_image)
+        self._fix_dpi_units.addItems(self._dpi_units)
+        self._fix_dpi_units.activated.connect(self._fixed_image)
         self._fix_size.toggled.connect(self._fixed_image)
 
         wxh_layout = QHBoxLayout()
@@ -178,7 +178,7 @@ class SettingsWindow(QWidget):
 
         layout.addRow("Fix export size:", self._fix_size)
         layout.addRow("Width x Height:", wxh_layout)
-        layout.addRow("Unit:", self._fix_dpi)
+        layout.addRow("Unit:", self._fix_dpi_units)
 
         vertical_layout = QVBoxLayout()
 
@@ -214,7 +214,7 @@ class SettingsWindow(QWidget):
         w = self._fix_width.value()
         h = self._fix_height.value()
         dpi = 100
-        scale = self._fix_dpi.currentText()
+        scale = self._fix_dpi_units.currentText()
 
         ctx.set_image_size(*self.to_inches(w, h, dpi, scale))
 
