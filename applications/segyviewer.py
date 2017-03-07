@@ -8,13 +8,17 @@ from segyviewlib import resource_icon, SegyViewWidget
 
 
 class SegyViewer(QMainWindow):
-    def __init__(self, filename=None):
+    def __init__(self, filename=None, il = None, xl = None):
         QMainWindow.__init__(self)
+
+        self.segyioargs = { k: v for k, v in [('iline', il), ('xline', xl)]
+                                          if v is not None }
 
         self.setAttribute(Qt.WA_DeleteOnClose)
         self.setWindowTitle("SEG-Y Viewer")
 
-        self._segy_view_widget = SegyViewWidget(filename, show_toolbar=True)
+        self._segy_view_widget = SegyViewWidget(filename, show_toolbar=True,
+                                                          segyioargs = self.segyioargs)
 
         self.setCentralWidget(self._segy_view_widget)
         self.setWindowIcon(resource_icon("350px-SEGYIO.png"))
@@ -34,24 +38,28 @@ class SegyViewer(QMainWindow):
         input_file = str(input_file).strip()
 
         if input_file:
-            self._segy_view_widget.set_source_filename(input_file)
+            self._segy_view_widget.set_source_filename(input_file, **self.segyioargs)
 
 
-def run(filename):
-    segy_viewer = SegyViewer(filename)
+def run(filename, il, xl):
+    segy_viewer = SegyViewer(filename, il, xl)
     segy_viewer.show()
     segy_viewer.raise_()
     sys.exit(q_app.exec_())
 
 
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        sys.exit("Usage: segyviewer.py [file]")
+    parser = argparse.ArgumentParser(description = 'Simple SEG-Y visualization')
+    parser.add_argument('filename',   type = str, help = 'File to open')
+    parser.add_argument('-i', '--il', type = int,
+                                      help = 'inline identifer')
+    parser.add_argument('-x', '--xl', type = int,
+                                      help = 'crossline identifer')
 
-    filename = sys.argv[1]
+    args = parser.parse_args()
 
     q_app = QApplication(sys.argv)
 
     # import cProfile
     # cProfile.run('run(%s)' % filename, filename=None, sort='cumulative')
-    run(filename)
+    run(args.filename, args.il, args.xl)

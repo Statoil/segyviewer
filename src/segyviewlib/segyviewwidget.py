@@ -5,7 +5,9 @@ from segyviewlib import SliceDataSource, SliceModel, SliceDirection as SD, Slice
 
 
 class SegyViewWidget(QWidget):
-    def __init__(self, filename, show_toolbar=True, color_maps=None, width=11.7, height=8.3, dpi=100, parent=None):
+    def __init__(self, filename, show_toolbar=True, color_maps=None,
+                                 width=11.7, height=8.3, dpi=100,
+                                 segyioargs = {}, parent=None):
         QWidget.__init__(self, parent)
 
         inline = SliceModel("Inline", SD.inline, SD.crossline, SD.depth)
@@ -13,7 +15,7 @@ class SegyViewWidget(QWidget):
         depth = SliceModel("Depth", SD.depth, SD.inline, SD.crossline)
 
         slice_models = [inline, xline, depth]
-        slice_data_source = SliceDataSource(filename)
+        slice_data_source = SliceDataSource(filename, **segyioargs)
         self._slice_data_source = slice_data_source
 
         self._context = SliceViewContext(slice_models, slice_data_source)

@@ -48,12 +48,12 @@ class EmptyDataSource(object):
 class SliceDataSource(QObject):
     slice_data_source_changed = pyqtSignal()
 
-    def __init__(self, filename):
+    def __init__(self, filename, **kwargs):
         QObject.__init__(self)
 
         self._source = None
         """ :type: segyio.SegyFile """
-        self.set_source_filename(filename)
+        self.set_source_filename(filename, **kwargs)
 
     def _close_current_file(self):
         if isinstance(self._source, segyio.SegyFile):
@@ -61,10 +61,10 @@ class SliceDataSource(QObject):
 
         self._source = None
 
-    def set_source_filename(self, filename):
+    def set_source_filename(self, filename, **kwargs):
         if filename:
             try:
-                source = segyio.open(filename, "r")
+                source = segyio.open(filename, "r", **kwargs)
             except:
                 raise
             else:
