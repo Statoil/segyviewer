@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sys
+import argparse
 
 from PyQt4.QtCore import Qt
 from PyQt4.QtGui import QMainWindow, QApplication, QToolButton, QFileDialog, QIcon
