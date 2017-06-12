@@ -81,7 +81,8 @@ class SettingsWindow(QWidget):
         self._interpolation_combo.currentIndexChanged.connect(self._interpolation_changed)
 
         # plot export settings
-        self._plt_settings_wdgt = PlotExportSettingsWidget(self, parent._slice_view_widget, self._context)
+        if self._context._has_data:
+            self._plt_settings_wdgt = PlotExportSettingsWidget(self, parent._slice_view_widget, self._context)
 
         # define tree layout
         tree_def = {"": [
@@ -118,15 +119,17 @@ class SettingsWindow(QWidget):
                       {"Interpolation Type:": self._align(self._interpolation_combo)}
                       ]
              },
-            {"Plot export dimensions": [
+        ]}
+
+        if self._context._has_data:
+            tree_def[''].append({"Plot export dimensions": [
                 {"": self._align(self._plt_settings_wdgt.label)},
                 {"Fixed size": self._align(self._plt_settings_wdgt.checkbox)},
                 {"Width:": self._align(self._plt_settings_wdgt.width_spinbox)},
                 {"Height:": self._align(self._plt_settings_wdgt.height_spinbox)},
                 {"Units:": self._align(self._plt_settings_wdgt.units_combobox)}
             ]
-            }
-        ]}
+            })
 
         # setup the menu/navigation tree widget
         tre = QTreeWidget(self)
@@ -232,24 +235,25 @@ class SettingsWindow(QWidget):
         self._offset_count.setText("%d" % offsets)
         self._sample_count.setText("%d" % samples)
 
-        self._minimum_value.setText("%f" % ctx.global_minimum)
-        self._maximum_value.setText("%f" % ctx.global_maximum)
+        if ctx._has_data:
+            self._minimum_value.setText("%f" % ctx.global_minimum)
+            self._maximum_value.setText("%f" % ctx.global_maximum)
 
-        indexes = ctx.slice_data_source().indexes_for_direction(SliceDirection.inline).tolist()
-        index = ctx.index_for_direction(SliceDirection.inline)
-        self._il_ctrl.update_view(indexes, index)
+            indexes = ctx.slice_data_source().indexes_for_direction(SliceDirection.inline).tolist()
+            index = ctx.index_for_direction(SliceDirection.inline)
+            self._il_ctrl.update_view(indexes, index)
 
-        indexes = ctx.slice_data_source().indexes_for_direction(SliceDirection.crossline).tolist()
-        index = ctx.index_for_direction(SliceDirection.crossline)
-        self._xl_ctrl.update_view(indexes, index)
+            indexes = ctx.slice_data_source().indexes_for_direction(SliceDirection.crossline).tolist()
+            index = ctx.index_for_direction(SliceDirection.crossline)
+            self._xl_ctrl.update_view(indexes, index)
 
-        indexes = ctx.slice_data_source().indexes_for_direction(SliceDirection.depth).tolist()
-        index = ctx.index_for_direction(SliceDirection.depth)
-        self._depth_ctrl.update_view(indexes, index)
+            indexes = ctx.slice_data_source().indexes_for_direction(SliceDirection.depth).tolist()
+            index = ctx.index_for_direction(SliceDirection.depth)
+            self._depth_ctrl.update_view(indexes, index)
 
-        index = self._samples_unit.findText(ctx.samples_unit)
-        if index != -1:
-            self._samples_unit.setCurrentIndex(index)
+            index = self._samples_unit.findText(ctx.samples_unit)
+            if index != -1:
+                self._samples_unit.setCurrentIndex(index)
 
     def _set_view_label(self, indicator_on):
         self._view_label.setText("indicators {0}".format("on" if indicator_on else "off"))

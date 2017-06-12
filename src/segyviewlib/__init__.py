@@ -34,6 +34,7 @@ from .sliceview import SliceView
 from .sliceviewwidget import SliceViewWidget
 from .settingswindow import SettingsWindow
 from .segyviewwidget import SegyViewWidget
+from .segywidgetcollection import SegyTabWidget
 
 __version__ = '1.0.5'
 __copyright__ = 'Copyright 2016, Statoil ASA'

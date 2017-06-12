@@ -6,8 +6,8 @@ from segyviewlib import SliceDataSource, SliceModel, SliceDirection as SD, Slice
 
 class SegyViewWidget(QWidget):
     def __init__(self, filename, show_toolbar=True, color_maps=None,
-                                 width=11.7, height=8.3, dpi=100,
-                                 segyioargs = {}, parent=None):
+                 width=11.7, height=8.3, dpi=100,
+                 segyioargs={}, parent=None):
         QWidget.__init__(self, parent)
 
         inline = SliceModel("Inline", SD.inline, SD.crossline, SD.depth)
@@ -33,6 +33,16 @@ class SegyViewWidget(QWidget):
         layout.addWidget(self._slice_view_widget)
 
         self.setLayout(layout)
+
+    @property
+    def context(self):
+        """ :rtype: SliceViewContext"""
+        return self._context
+
+    @property
+    def slice_data_source(self):
+        """ :rtype: SliceDataSource"""
+        return self._slice_data_source
 
     def toolbar(self):
         """ :rtype: QToolBar """
@@ -98,7 +108,7 @@ class SegyViewWidget(QWidget):
             fig = self._slice_view_widget
         else:
             w, h, dpi = image_size
-            fig = SliceViewWidget(self._context, width = w, height = h, dpi = dpi)
+            fig = SliceViewWidget(self._context, width=w, height=h, dpi=dpi)
             fig.set_plot_layout(self._slice_view_widget.layout_figure().current_layout())
 
         fig.layout_figure().savefig(output_file)
@@ -114,3 +124,5 @@ class SegyViewWidget(QWidget):
         if self._settings_window.isMinimized():
             self._settings_window.showNormal()
 
+    def show_toolbar(self,value):
+        self._toolbar.setVisible(value)
