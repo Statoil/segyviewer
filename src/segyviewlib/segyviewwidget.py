@@ -53,9 +53,9 @@ class SegyViewWidget(QWidget):
         toolbar.setFloatable(False)
         toolbar.setMovable(False)
 
-        layout_combo = LayoutCombo()
-        toolbar.addWidget(layout_combo)
-        layout_combo.layout_changed.connect(self._slice_view_widget.set_plot_layout)
+        self.layout_combo = LayoutCombo()
+        toolbar.addWidget(self.layout_combo)
+        self.layout_combo.layout_changed.connect(self._slice_view_widget.set_plot_layout)
 
         # self._colormap_combo = ColormapCombo(['seismic', 'spectral', 'RdGy', 'hot', 'jet', 'gray'])
         self._colormap_combo = ColormapCombo(color_maps)
@@ -82,7 +82,7 @@ class SegyViewWidget(QWidget):
         self._settings_window.closeEvent = toggle_on_close
 
         self._colormap_combo.setCurrentIndex(45)
-        layout_combo.setCurrentIndex(4)
+        self.set_default_layout()
 
         return toolbar
 
@@ -115,6 +115,13 @@ class SegyViewWidget(QWidget):
 
     def set_source_filename(self, filename):
         self._slice_data_source.set_source_filename(filename)
+
+    def set_default_layout(self):
+        # default slice view layout depends on the file size
+        if self._slice_data_source.file_size < 8 * 10 ** 8:
+            self.layout_combo.setCurrentIndex(self.layout_combo.DEFAULT_SMALL_FILE_LAYOUT)
+        else:
+            self.layout_combo.setCurrentIndex(self.layout_combo.DEFAULT_LARGE_FILE_LAYOUT)
 
     def as_depth(self):
         self._context.samples_unit = 'Depth (m)'

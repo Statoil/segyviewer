@@ -7,6 +7,9 @@ from segyviewlib import resource_icon
 class LayoutCombo(QComboBox):
     layout_changed = pyqtSignal(object)
 
+    DEFAULT_LARGE_FILE_LAYOUT = 4
+    DEFAULT_SMALL_FILE_LAYOUT = 2
+
     def __init__(self, parent=None):
         QComboBox.__init__(self, parent)
 

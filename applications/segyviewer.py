@@ -43,6 +43,7 @@ class SegyViewer(QMainWindow):
 
         if input_file:
             self._segy_view_widget.set_source_filename(input_file, **self.segyioargs)
+            self._segy_view_widget.set_default_layout()
             self.setWindowTitle(input_file)
 
 

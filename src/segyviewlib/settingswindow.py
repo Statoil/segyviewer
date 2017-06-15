@@ -108,7 +108,7 @@ class SettingsWindow(QWidget):
                        {"Type": self._align(self._samples_unit)}
                        ]
              },
-            {"Sample": [
+            {"Color Scale": [
                 {"Custom min.:": self._align(self._sample_ctrl.min_spinbox, self._sample_ctrl.min_checkbox)},
                 {"Custom max.:": self._align(self._sample_ctrl.max_spinbox, self._sample_ctrl.max_checkbox)},
                 {"Symmetric scale:": self._align(self._symmetric_scale)}

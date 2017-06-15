@@ -53,9 +53,8 @@ class ArraySpinBox(QSpinBox):
             index = self._values.index(value)
         except ValueError:
             for value in self._values:
-                if str(value).startswith(text):
+                if str(value).startswith(text[:pos]):
                     return QValidator.Intermediate, pos
-
             return QValidator.Invalid, pos
 
         return QValidator.Acceptable, pos

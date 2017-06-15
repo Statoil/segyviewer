@@ -46,6 +46,7 @@ class SliceModel(object):
     def indexes(self, indexes):
         """ :type indexes: list[int] """
         self._indexes = indexes
+        self._index = len(indexes) / 2
 
     @property
     def x_indexes(self):
@@ -57,6 +58,7 @@ class SliceModel(object):
         """ :type indexes: list[int] """
         self._assert_shape(self._data, indexes, self._y_indexes)
         self._x_indexes = indexes
+        self.x_index = len(indexes) / 2
 
     @property
     def y_indexes(self):
@@ -68,6 +70,7 @@ class SliceModel(object):
         """ :type indexes: list[int] """
         self._assert_shape(self._data, self._x_indexes, indexes)
         self._y_indexes = indexes
+        self.y_index = len(indexes) / 2
 
     @staticmethod
     def _assert_shape(data, x_indexes, y_indexes):

@@ -3,6 +3,7 @@ from PyQt4.QtCore import QObject, pyqtSignal
 from .slicemodel import SliceDirection
 import numpy as np
 import segyio
+import os
 
 
 class EmptyDataSource(object):
@@ -66,6 +67,7 @@ class SliceDataSource(QObject):
     def __init__(self, filename, **kwargs):
         QObject.__init__(self)
 
+        self._file_size = 0
         self._source = None
         """ :type: segyio.SegyFile """
         self.set_source_filename(filename, **kwargs)
@@ -74,17 +76,24 @@ class SliceDataSource(QObject):
         if isinstance(self._source, segyio.SegyFile):
             self._source.close()
 
+        self._file_size = 0
         self._source = None
+
+    @property
+    def file_size(self):
+        return self._file_size
 
     def set_source_filename(self, filename, **kwargs):
         if filename:
             try:
+                file_size = os.stat(filename).st_size
                 source = segyio.open(filename, "r", **kwargs)
             except:
                 raise
             else:
                 self._close_current_file()
                 self._source = source
+                self._file_size = file_size
                 self._source.mmap()
                 samples = self._source.samples
         else:
