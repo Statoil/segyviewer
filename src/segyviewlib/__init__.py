@@ -2,9 +2,6 @@ import os.path as path
 
 img_prefix = path.abspath(path.join(path.dirname(path.abspath(__file__)), "resources", "img"))
 
-if not path.exists(img_prefix):
-    img_prefix = path.abspath(path.join(path.dirname(path.abspath(__file__)), "..", "..", "resources", "img"))
-
 
 def resource_icon_path(name):
     return path.join(img_prefix, name)
@@ -35,7 +32,8 @@ from .sliceviewwidget import SliceViewWidget
 from .settingswindow import SettingsWindow
 from .segyviewwidget import SegyViewWidget
 
-__version__ = '1.0.6'
+from .version import __version__
+
 __copyright__ = 'Copyright 2016, Statoil ASA'
 __license__ = 'GNU Lesser General Public License version 3'
 __status__ = 'Production'
