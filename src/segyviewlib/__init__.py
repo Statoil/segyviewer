@@ -31,6 +31,7 @@ from .sliceview import SliceView
 from .sliceviewwidget import SliceViewWidget
 from .settingswindow import SettingsWindow
 from .segyviewwidget import SegyViewWidget
+from .segywidgetcollection import SegyTabWidget
 
 from .version import __version__
 

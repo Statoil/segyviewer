@@ -221,6 +221,10 @@ class SliceModel(object):
         """ :type: bool """
         return self._dirty
 
+    @dirty.setter
+    def dirty(self,value):
+        self._dirty = value
+
     def __len__(self):
         return len(self.indexes)
 
