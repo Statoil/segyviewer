@@ -81,4 +81,4 @@ class ColormapCombo(QComboBox):
         return color_maps
 
     def itemText(self, index):
-        return str(self.itemData(index, Qt.ToolTipRole).toString())
+        return str(self.itemData(index, Qt.ToolTipRole))

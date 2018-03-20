@@ -46,7 +46,7 @@ class SliceModel(object):
     def indexes(self, indexes):
         """ :type indexes: list[int] """
         self._indexes = indexes
-        self._index = len(indexes) / 2
+        self._index = len(indexes) // 2
 
     @property
     def x_indexes(self):
