@@ -203,7 +203,7 @@ class SettingsWindow(QWidget):
         layout.setContentsMargins(0, 0, 0, 0)
 
     def _build_tree(self, tree_wdgt, tree_def, root):
-        parent, children = tree_def.items()[0]
+        parent, children = list(tree_def.items())[0]
 
         # empty label /parent is a special case: either inline with the previous, or skip
         if parent == "":

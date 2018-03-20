@@ -107,8 +107,7 @@ class LayoutCombo(QComboBox):
     def _get_spec(self, index):
         user_data = self.itemData(index)
         """ :type: QVariant"""
-        spec = user_data.toPyObject()
-        return {str(key): value for key, value in spec.items()}
+        return {str(key): value for key, value in user_data.items()}
 
     def get_current_layout(self):
         return self._get_spec(self.currentIndex())
