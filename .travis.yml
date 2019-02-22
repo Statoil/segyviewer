@@ -31,11 +31,11 @@ install:
       fi
     fi
 
-    bash miniconda.sh -b -p $HOME/miniconda;
-    export PATH="$HOME/miniconda/bin:$PATH";
+  - bash miniconda.sh -b -p $HOME/miniconda;
+  -  export PATH="$HOME/miniconda/bin:$PATH";
     #conda config --set always_yes yes --set changeps1 no;
-    conda update -q conda;
-    conda info -a;
+  -  conda update -q conda;
+  -  conda info -a;
   - if [[ "$PYTHON_VERSION" == "2.7" ]]; then
       conda create -n env pyqt=4.11.4 --yes;
     else
